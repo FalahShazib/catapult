@@ -16,10 +16,10 @@ public class GrabStars : MonoBehaviour {
 
     private void OnTriggerEnter(Collider collision)
     {
-        //if (collision.tag == "star")
-        //{
-            // Object.Destroy(collision.gameObject);
+        if (collision.tag == "star")
+        {
+            Destroy(this.gameObject);
             Debug.Log("caught a star");
-        //}
+        }
     }
 }
