@@ -620,7 +620,10 @@ namespace Oculus.Platform
       return null;
     }
 
-  }
+        internal static void Quit()
+        {
+        }
+    }
 
   public static partial class AssetFile
   {

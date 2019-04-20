@@ -1,0 +1,19 @@
+﻿<Properties StartupConfiguration="{DE780FCE-9263-C015-228F-31DCD60C7480}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ExitOnClick.cs">
+    <Files>
+      <File FileName="Assets/Scripts/Menu.cs" Line="10" Column="23" />
+      <File FileName="Assets/Menu/Scripts/LoadSceneOnClick.cs" Line="4" Column="35" />
+      <File FileName="Assets/Scripts/ExitOnClick.cs" Line="1" Column="7" />
+      <File FileName="Assets/Scripts/DetectTarget.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/prachi-work/Desktop/Projects/catapult/Assets/ExitOnClick.cs" relfile="Assets/ExitOnClick.cs" line="12" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
