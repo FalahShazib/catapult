@@ -11,18 +11,26 @@ public class ApplyForce : MonoBehaviour
 
     // state
     private bool bTargetReady;
+    private bool isFLying;
+    private char planeNumber;
 
     // cache
     private Rigidbody rigid;
     private Vector3 initialPosition;
     private Quaternion initialRotation;
     private Quaternion initCameraRot;
+    private bool triggerPressed = false;
+    private bool triggerReleased = false;
+    private float timeDelay;
 
+    private int starCaught;
+    
     // Use this for initialization
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
         bTargetReady = true;
+        isFLying = false;
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         Debug.Log("detected");
@@ -31,8 +39,10 @@ public class ApplyForce : MonoBehaviour
     // launches the object towards the TargetObject with a given LaunchAngle
     void Launch()
     {
-        if (TargetObject != null)
+        if (TargetObject != null && !isFLying)
         {
+            isFLying = true;
+            //Debug.Log("is flying");
             //Debug.Log("stat1: " + transform.rotation);
             // think of it as top-down view of vectors: 
             //   we don't care about the y-component(height) of the initial and target position.
@@ -75,37 +85,92 @@ public class ApplyForce : MonoBehaviour
     void ResetToInitialState()
     {
         rigid.velocity = Vector3.zero;
-        //this.transform.SetPositionAndRotation(TargetObject.position, initialRotation);
+        this.transform.SetPositionAndRotation(initialPosition, initialRotation);
         bTargetReady = false;
+        isFLying = false;
+        CurrentStar = null;
+        //Debug.Log("reset");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if ((OVRInput.Get(OVRInput.RawButton.B)) || (Input.GetKeyDown(KeyCode.Space)))
+        if ((OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0))
         {
-            if (bTargetReady)
+            triggerPressed = true;
+            //Debug.Log("trigger pressed: " + triggerPressed);
+        } else if (triggerPressed)
+        {
+            triggerReleased = true;
+            //Debug.Log("tirgger released: " + triggerReleased);
+        }
+
+
+        if (triggerPressed)
+        {
+            IncrementAngle();
+            if (triggerReleased)
             {
-                //Debug.Log("before: " + transform.rotation);
-                //transform.rotation = localCam.transform.rotation;
-                //Debug.Log("after: " + transform.rotation);
-                if (CurrentStar != null)
-                {
-                    CurrentStar.SetActive(false);
-                }
-                Debug.Log("about to launch");
-                Launch();
-            }
-            else
-            {
-                ResetToInitialState();
-                bTargetReady = true;
+                //if (bTargetReady)
+                //{
+                    if (CurrentStar != null)
+                    {
+                        CurrentStar.SetActive(false);
+                    }
+                    //Debug.Log("about to launch");
+                    //Debug.Log(isFLying);
+                    //Debug.Log(LaunchAngle);
+                    Launch();
+                //}
+                //else
+                //{
+                //    bTargetReady = true;
+                //}
+                triggerReleased = false;
+                triggerPressed = false;
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (CurrentStar != null && !isFLying)
+        {
+            CurrentStar.SetActive(true);
+            string starName = CurrentStar.gameObject.name;
+            int starNumber = starName.Length - 1;
+            if (starName[starNumber] == planeNumber)
+            {
+                CurrentStar.SetActive(false);
+                //CurrentStar = null;
+            }
+        } else if (CurrentStar != null)
+        {
+            CurrentStar.SetActive(false);
+        }
+
+        //if ((OVRInput.Get(OVRInput.RawButton.B)) || (Input.GetKeyDown(KeyCode.Space)))
+        //{
+        //    if (bTargetReady)
+        //    {
+        //        //Debug.Log("before: " + transform.rotation);
+        //        //transform.rotation = localCam.transform.rotation;
+        //        //Debug.Log("after: " + transform.rotation);
+        //        if (CurrentStar != null)
+        //        {
+        //            CurrentStar.SetActive(false);
+        //        }
+        //        //Debug.Log("about to launch");
+        //        Launch();
+        //    }
+        //    else
+        //    {
+        //        //ResetToInitialState();
+        //        bTargetReady = true;
+        //    }
+        //}
+
+        if ((OVRInput.Get(OVRInput.RawButton.X)))
         {
             ResetToInitialState();
+            Debug.Log("stars: " + starCaught);
         }
 
         Quaternion rot = Quaternion.Euler(0, transform.rotation.y, 0);
@@ -114,10 +179,52 @@ public class ApplyForce : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.name == "target")
+       // Debug.Log("landed on " + other.gameObject.name);
+        if (other.gameObject.name.Contains("plane"))
         {
-            Debug.Log(other.transform.position);
-            this.transform.position = other.transform.position;
+            isFLying = false;
+            //Debug.Log("not flying");
+
+            planeNumber = other.gameObject.name[other.gameObject.name.Length - 1];
+            if (CurrentStar != null)
+            {
+                string planeName = other.gameObject.name;
+                string starName = CurrentStar.gameObject.name;
+                int planeNumber = planeName.Length - 1;
+                int starNumber = starName.Length - 1;
+                if (starName[starNumber] == planeName[planeNumber])
+                {
+                    //Debug.Log("deactivate star collision");
+                    CurrentStar.SetActive(false);
+                }
+            }
+        } else
+        {
+            planeNumber = 'n';
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.name.Contains("star"))
+        {
+            Destroy(other.gameObject);
+            Debug.Log("caught a star");
+            starCaught++;
+        }
+    }
+    private void IncrementAngle()
+    {
+        if (Time.time > timeDelay)
+        {
+            float inc;
+            timeDelay = Time.time + 0.75f;
+            LaunchAngle = LaunchAngle + 5f;
+            inc = LaunchAngle % 75;
+            if (inc < 35f)
+            {
+                LaunchAngle = 35;
+            }
         }
     }
 }
