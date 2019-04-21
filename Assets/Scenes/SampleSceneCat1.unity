@@ -6326,7 +6326,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &660765421
 Transform:
   m_ObjectHideFlags: 0
@@ -12031,7 +12031,7 @@ MonoBehaviour:
   - {fileID: 1553447047}
   - {fileID: 189874370}
   - {fileID: 422130873}
-  - {fileID: 0}
+  - {fileID: 660765420}
   islandStars:
   - {fileID: 2101977735}
   - {fileID: 397409664}
