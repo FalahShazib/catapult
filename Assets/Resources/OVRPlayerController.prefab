@@ -661,6 +661,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetObject: {fileID: 0}
+  CurrentStar: {fileID: 0}
+  localCam: {fileID: 0}
   LaunchAngle: 0
 --- !u!114 &114913757653907344
 MonoBehaviour:
