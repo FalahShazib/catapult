@@ -20,9 +20,9 @@ A virtual reality game compatible with the Oculus Rift that allows you to launch
 
 <b>Pro tips:</b> For an optimal experience
 
-. The closer the island is, the greater the angle needed to reach it.
-. Do not be alarmed if you start sliding towards of edge of the island; it's part of the design (or is it?)
-. If you can't see any of the islands, try opening your eyes. This will improve your gameplay experience.
-. The highest island is actually the easiest to reach from off the side from the main plane with the largest possible angle.
-. For a truly immersive experience, get a friend or coworker to fan you while you are catapulting. This will truly replicate the experience of being hurtled through the air. An electric fan is a good substitute. 
-. Just for fun - we have hidden 5 (somewhat small) elephants in the scene. They don't give you extra points but if you can find them all, then you are the true pro. 
+1. The closer the island is, the greater the angle needed to reach it.
+2. Do not be alarmed if you start sliding towards of edge of the island; it's part of the design (or is it?)
+3. If you can't see any of the islands, try opening your eyes. This will improve your gameplay experience.
+4. The highest island is actually the easiest to reach from off the side from the main plane with the largest possible angle.
+5. For a truly immersive experience, get a friend or coworker to fan you while you are catapulting. This will truly replicate the experience of being hurtled through the air. An electric fan is a good substitute. 
+6. Just for fun - we have hidden 5 (somewhat small) elephants in the scene. They don't give you extra points but if you can find them all, then you are the true pro. 
