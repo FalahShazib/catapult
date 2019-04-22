@@ -1,4 +1,4 @@
-CATAPULT
+<b>CATAPULT</b>
 
 How to play:
 
