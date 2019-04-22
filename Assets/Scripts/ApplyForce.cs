@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ApplyForce : MonoBehaviour
 {
@@ -12,11 +13,13 @@ public class ApplyForce : MonoBehaviour
     [Range(20.0f, 75.0f)] public float LaunchAngle;
     public GameObject AngleDisplay;
     public GameObject GameOverDisplay;
+    public GameObject Backdrop;
 
     // state
     private bool isFLying;
     private char planeNumber;
     private float start;
+    private bool gameOver;
 
     // cache
     private Rigidbody rigid;
@@ -39,20 +42,19 @@ public class ApplyForce : MonoBehaviour
         initialRotation = transform.rotation;
         planesVisited = new bool[7];
         start = Time.time;
+        gameOver = false;
     }
 
     /// <summary>
     /// launches the object towards the TargetObject with a given LaunchAngle
-    /// Code adapted from (insert link)
+    /// Code adapted from https://vilbeyli.github.io/Simple-Trajectory-Motion-Example-Unity3D/
     /// </summary>
     private void Launch()
     {
+        Debug.Log("launching from plane " + planeNumber + " to " + TargetName);
         AngleDisplay.SetActive(false);
         if (TargetObject != null && !isFLying)
         {
-            Debug.Log(TargetName);
-            if (TargetName != "balloon")
-            {
                 isFLying = true;
                 // think of it as top-down view of vectors: 
                 //   we don't care about the y-component(height) of the initial and target position.
@@ -81,12 +83,11 @@ public class ApplyForce : MonoBehaviour
                 // launch the object by setting its initial velocity and flipping its state
                 transform.rotation = initCameraRot;
                 rigid.velocity = globalVelocity;
-            }
-            else if (planeNumber == '4')
-            {
+        }
+        else if (TargetName == "balloon" && planeNumber == '4') // can only end the game from the highest island
+        {
                 Debug.Log("game finished");
                 FinishGame();
-            }
         }
     }
 
@@ -129,6 +130,11 @@ public class ApplyForce : MonoBehaviour
 
         Quaternion rot = Quaternion.Euler(0, transform.rotation.y, 0);
         transform.rotation = rot;
+
+        if ((OVRInput.Get(OVRInput.RawButton.A)) && gameOver)
+        {
+            SceneManager.LoadScene("SampleSceneCat1");
+        }
     }
 
     /// <summary>
@@ -169,7 +175,6 @@ public class ApplyForce : MonoBehaviour
         if (other.gameObject.name.Contains("star"))
         {
             Destroy(other.gameObject);
-            Debug.Log("caught a star!");
             starCaught++;
         }
     }
@@ -242,6 +247,9 @@ public class ApplyForce : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// A little bit hacky -- prevents weird bug where we sometimes fell through the plane
+    /// </summary>
     private void DontFall()
     {
         if (transform.position.y < 1.15)
@@ -251,12 +259,18 @@ public class ApplyForce : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Store the visited planes
+    /// </summary>
     private void RecordPlane(char number)
     {
         int num = int.Parse(number.ToString());
         planesVisited[num] = true;
     }
 
+    /// <summary>
+    /// Check if all the islands have been visited
+    /// </summary>
     private void CheckFinishState()
     {
         foreach (bool state in planesVisited)
@@ -269,11 +283,16 @@ public class ApplyForce : MonoBehaviour
         Balloon.SetActive(true);
     }
 
+    /// <summary>
+    /// Display finishing stats
+    /// </summary>
     private void FinishGame()
     {
+        gameOver = true;
         float end = Time.time;
         float playtime = end - start;
         GameOverDisplay.SetActive(true);
-        GameOverDisplay.GetComponent<TextMesh>().text = "Game Over!\n You caught " + starCaught + " stars in " + playtime + "secs!";
+        Backdrop.SetActive(true);
+        GameOverDisplay.GetComponent<TextMesh>().text = "Game Over!\n You caught " + starCaught + " stars\n in " + playtime + " secs!\n Press 'A' to restart.";
     }
 }

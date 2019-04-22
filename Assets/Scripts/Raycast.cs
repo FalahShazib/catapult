@@ -38,10 +38,9 @@ public class Raycast : MonoBehaviour {
             }
             else if (hit.collider.gameObject.name == "balloon")
             {
-                manager.TargetObject = targets[6].transform;
-                manager.CurrentStar = islandStars[6];
+                manager.TargetObject = null;
+                manager.CurrentStar = null;
                 manager.TargetName = "balloon";
-                currStar = 6;
             }
             else
             {
