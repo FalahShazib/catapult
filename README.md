@@ -3,7 +3,7 @@
 
 ![alt text](https://raw.github.com/FalahShazib/catapult/master/58461340_422257915002772_8995088791291035648_n.png)
 
-A virtual reality game compatible with the Oculus Rift that allows you to launch yourself from island to island collecting stars!
+A virtual reality game compatible with the Oculus Rift that allows you to launch yourself from island to island collecting stars! Developed using Unity V2018.2.20.
 
 <b>How to play:</b>
 
