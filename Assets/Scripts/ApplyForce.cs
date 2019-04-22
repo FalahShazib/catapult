@@ -10,10 +10,13 @@ public class ApplyForce : MonoBehaviour
     public GameObject CurrentStar;
     public GameObject localCam;
     [Range(20.0f, 75.0f)] public float LaunchAngle;
+    public GameObject AngleDisplay;
+    public GameObject GameOverDisplay;
 
     // state
     private bool isFLying;
     private char planeNumber;
+    private float start;
 
     // cache
     private Rigidbody rigid;
@@ -35,6 +38,7 @@ public class ApplyForce : MonoBehaviour
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         planesVisited = new bool[7];
+        start = Time.time;
     }
 
     /// <summary>
@@ -43,6 +47,7 @@ public class ApplyForce : MonoBehaviour
     /// </summary>
     private void Launch()
     {
+        AngleDisplay.SetActive(false);
         if (TargetObject != null && !isFLying)
         {
             Debug.Log(TargetName);
@@ -77,10 +82,10 @@ public class ApplyForce : MonoBehaviour
                 transform.rotation = initCameraRot;
                 rigid.velocity = globalVelocity;
             }
-            else
+            else if (planeNumber == '4')
             {
-                transform.position = TargetObject.position;
                 Debug.Log("game finished");
+                FinishGame();
             }
         }
     }
@@ -98,6 +103,7 @@ public class ApplyForce : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        DontFall();
         DetectTrigger();
         CheckFinishState();
 
@@ -136,6 +142,7 @@ public class ApplyForce : MonoBehaviour
             isFLying = false;
 
             planeNumber = other.gameObject.name[other.gameObject.name.Length - 1];
+            RecordPlane(planeNumber);
             if (CurrentStar != null)
             {
                 string planeName = other.gameObject.name;
@@ -183,6 +190,8 @@ public class ApplyForce : MonoBehaviour
                 LaunchAngle = 35;
             }
         }
+        AngleDisplay.SetActive(true);
+        AngleDisplay.GetComponent<TextMesh>().text = LaunchAngle.ToString() + "\u00B0";
     }
 
     /// <summary>
@@ -233,6 +242,15 @@ public class ApplyForce : MonoBehaviour
         }
     }
 
+    private void DontFall()
+    {
+        if (transform.position.y < 1.15)
+        {
+            Vector3 position = new Vector3(transform.position.x, (float) 1.16, transform.position.z);
+            transform.SetPositionAndRotation(position, transform.rotation);
+        }
+    }
+
     private void RecordPlane(char number)
     {
         int num = int.Parse(number.ToString());
@@ -249,5 +267,13 @@ public class ApplyForce : MonoBehaviour
             }
         }
         Balloon.SetActive(true);
+    }
+
+    private void FinishGame()
+    {
+        float end = Time.time;
+        float playtime = end - start;
+        GameOverDisplay.SetActive(true);
+        GameOverDisplay.GetComponent<TextMesh>().text = "Game Over!\n You caught " + starCaught + " stars in " + playtime + "secs!";
     }
 }
